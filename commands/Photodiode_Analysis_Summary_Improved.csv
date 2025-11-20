@@ -1,0 +1,12 @@
+Parameter,Value
+Current Range,0.5 - 77.6 mA
+Voltage Range (2-wire),0.291 - 1.369 V
+Voltage Range (4-wire),0.277 - 0.833 V
+Avg Resistance - 2-wire (corrected),32.14 Ω
+Avg Resistance - 4-wire (corrected),24.49 Ω
+Extra Series Resistance ΔR,7.65 Ω
+2-wire Slope (Linear Fit),8.8 Ω
+4-wire Slope (Linear Fit),2.0 Ω
+2-wire Ideality Factor n,11.64
+4-wire Ideality Factor n,2.92
+Measurements Count (valid),72 points

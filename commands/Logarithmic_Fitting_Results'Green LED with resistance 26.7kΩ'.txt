@@ -1,0 +1,13 @@
+Logarithmic Fitting Results for IV Curves
+========================================
+
+2WIRE Measurement:
+  Equation: V = 0.263534 * log(I) + 1.646057
+  R-squared: 0.934096
+  Parameter uncertainties: a ± 0.011355, b ± 0.030723
+
+4WIRE Measurement:
+  Equation: V = 0.222121 * log(I) + 1.659939
+  R-squared: 0.921833
+  Parameter uncertainties: a ± 0.010493, b ± 0.028388
+

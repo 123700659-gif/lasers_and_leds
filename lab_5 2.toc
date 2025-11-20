@@ -1,0 +1,26 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {section}{\numberline {2}Pre - Lab}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}In Lab}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Class 1}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Current range}{3}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Design of the circuits}{3}{subsection.2.4}%
+\contentsline {section}{\numberline {3}Lab results}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}IV characterisation}{5}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Red LED}{6}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Amber LED}{8}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.3}Green LED}{11}{subsubsection.3.1.3}%
+\contentsline {subsubsection}{\numberline {3.1.4}Blue LED}{14}{subsubsection.3.1.4}%
+\contentsline {subsubsection}{\numberline {3.1.5}Laser}{17}{subsubsection.3.1.5}%
+\contentsline {subsection}{\numberline {3.2}Internal devices resistance}{20}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Conclusion}{21}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Devices properties}{21}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Band Structure and Optical Transitions}{22}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Confinement: Heterostructures and Quantum Wells}{22}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Double Heterostructure LEDs}{22}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Quantum Wells}{22}{subsubsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.3}InGaN Quantum Wells: Localization and High Efficiency}{23}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Recombination Rates and Efficiency}{23}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Polarization Fields in Wurtzite Nitrides}{24}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}OLEDs: Molecular Picture}{24}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Conclusion}{24}{subsection.4.7}%
+\contentsline {section}{\numberline {5}Conclusion}{25}{section.5}%

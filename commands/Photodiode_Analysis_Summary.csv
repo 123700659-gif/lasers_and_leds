@@ -1,0 +1,10 @@
+Parameter,Value
+Current Range,0.5 - 77.6 mA
+Voltage Range (2-wire),0.267 - 1.359 V
+Voltage Range (4-wire),0.254 - 0.834 V
+Avg Resistance (2-wire),29.20 Ω
+Avg Resistance (4-wire),22.35 Ω
+Extra Series Resistance,6.85 Ω
+2-wire Slope (Fit),0.0101 V/mA
+4-wire Slope (Fit),0.0033 V/mA
+Measurements Count,80 points

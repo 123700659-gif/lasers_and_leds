@@ -1,0 +1,126 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{amsmath,amssymb,braket,graphicx,siunitx}
+\usepackage{hyperref}
+
+\title{Quantum-Mechanical Commentary on LED and OLED Device Properties}
+\author{Prepared from supplied lecture notes \cite{lecture_leds} and Nakamura's Nobel Lecture \cite{nakamura2014}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This four-page note summarizes the essential quantum-mechanical and band-structure principles underlying the operation of inorganic LEDs (GaAs, GaN, InGaN), quantum-well structures, and organic LEDs. It condenses the longer commentary into a concise discussion emphasizing electronic structure, confinement, density-of-states effects, and radiative vs.\ non-radiative recombination mechanisms.
+\end{abstract}
+
+\section{Band Structure and Optical Transitions}
+
+In direct-gap semiconductors, conduction-band and valence-band extrema occur at the same crystal momentum. Approximating these bands as parabolic,
+\[
+E_c(\mathbf{k}) \approx E_{c0} + \frac{\hbar^2 k^2}{2m_e^*}, \qquad
+E_v(\mathbf{k}) \approx E_{v0} - \frac{\hbar^2 k^2}{2m_h^*},
+\]
+the interband transition energy is
+\[
+\hbar\omega = E_g + \frac{\hbar^2 k^2}{2m_r^*},
+\]
+with reduced mass \( m_r^{-1}=m_e^{-1}+m_h^{-1}\).  
+This joint dispersion governs emission linewidth and temperature dependence.
+
+The joint density of states (JDOS) for 3D parabolic bands scales as \( \sqrt{E-E_g} \), so the spontaneous emission spectrum approximately follows
+\[
+I(E)\propto \sqrt{E-E_g}\,e^{-E/k_BT},
+\]
+producing thermal broadening and characteristic lineshapes observed in LEDs.
+
+\section{Confinement: Heterostructures and Quantum Wells}
+
+\subsection{Double Heterostructure LEDs}
+
+The double heterostructure (DH), popularized in GaAs/AlGaAs devices, confines electrons and holes in a thin active layer with a smaller bandgap. This yields:
+
+\begin{itemize}
+    \item \textbf{Higher carrier density} in the active region, increasing radiative recombination \(R_\mathrm{rad} = Bn^2\).
+    \item \textbf{Reduced carrier leakage}, improving internal quantum efficiency (IQE).
+    \item \textbf{Spatially overlapping wavefunctions}, enhancing optical transition strength.
+\end{itemize}
+
+\subsection{Quantum Wells}
+
+In quantum wells only nanometers thick, motion in the growth direction is quantized, producing discrete subbands.  
+The 2D JDOS becomes "step-like", sharpening spectral features unless disorder broadening dominates.  
+Confinement also introduces a blue shift:
+\[
+E_{e1}+E_{h1}\propto \frac{\hbar^2\pi^2}{2}\left(\frac{1}{m_e^*}+\frac{1}{m_h^*}\right)\frac{1}{L^2}.
+\]
+
+\section{InGaN Quantum Wells: Localization and High Efficiency}
+
+Nakamura's Nobel Lecture \cite{nakamura2014} emphasizes a long-standing puzzle:  
+InGaN LEDs remain highly efficient despite extremely high dislocation densities.
+
+A widely accepted explanation is **carrier localization** arising from compositional fluctuations (Indium-rich regions) in In\(_x\)Ga\(_{1-x}\)N alloys. These fluctuations create nanometer-scale potential minima that:
+
+\begin{itemize}
+    \item Trap carriers or excitons, reducing diffusion to non-radiative dislocations.
+    \item Create inhomogeneous broadening and Stokes shifts.
+    \item Maintain high IQE even in imperfect crystals.
+\end{itemize}
+
+This mechanism underpins the remarkable performance of blue InGaN LEDs.
+
+\section{Recombination Rates and Efficiency}
+
+LED recombination dynamics are often captured by the
+\[
+R = A n + B n^2 + C n^3
+\]
+model, where:
+\begin{itemize}
+    \item \(A\): Shockley--Read--Hall (trap-assisted, non-radiative),
+    \item \(B\): radiative band-to-band recombination,
+    \item \(C\): Auger recombination (three-particle, non-radiative).
+\end{itemize}
+
+The internal quantum efficiency is:
+\[
+\mathrm{IQE} = \frac{Bn^2}{A n + B n^2 + C n^3}.
+\]
+
+At moderate carrier densities, the \(Bn^2\) term dominates, but at high density the \(C n^3\) Auger term causes **efficiency droop**, observed especially in high-power GaN LEDs \cite{povey_aug2013, shen2007}.
+
+\section{Polarization Fields in Wurtzite Nitrides}
+
+GaN and InGaN materials possess strong spontaneous and piezoelectric polarization fields.  
+In strained quantum wells these fields tilt the bands (quantum-confined Stark effect), leading to:
+
+\begin{itemize}
+    \item Reduced electron–hole overlap (larger radiative lifetime).
+    \item Red-shifted emission.
+    \item Lower efficiency if fields are too strong.
+\end{itemize}
+
+Modern device design uses barrier engineering or semi-polar orientations to mitigate these internal fields.
+
+\section{OLEDs: Molecular Picture}
+
+Unlike crystalline semiconductors, organic emitters exhibit localized molecular orbitals. The HOMO–LUMO gap determines emission colour, and excitons dominate recombination:
+
+\begin{itemize}
+    \item Excitons can be singlet or triplet.
+    \item Triplet harvesting via phosphorescent dopants or TADF increases efficiency.
+    \item Transport is hopping-like rather than band-like.
+\end{itemize}
+
+Thus OLED physics is governed primarily by molecular electronic structure rather than extended band diagrams.
+
+\section{Conclusion}
+
+LED and OLED operation can be understood through a compact set of quantum-mechanical principles:  
+band structures, density of states, quantum confinement, recombination kinetics, and disorder effects.  
+InGaN localization and heterostructure engineering enable the high efficiencies that underpin modern solid-state lighting.
+
+\bibliographystyle{unsrt}
+\bibliography{refs}
+
+\end{document}

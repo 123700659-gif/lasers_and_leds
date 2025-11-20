@@ -1,0 +1,375 @@
+\documentclass[11pt]{article}
+
+% Use minted only (remove listings to avoid conflicts)
+\usepackage{minted}
+\usepackage[left=1.5cm, right=1.5cm, top=1.5cm, bottom=2cm]{geometry}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}   % ensure UTF-8 encoding
+\usepackage[T1]{fontenc}      % better font encoding
+\DeclareUnicodeCharacter{03A9}{\ensuremath{\Omega}}
+\setminted{xleftmargin=10pt, xrightmargin=10pt}
+
+
+
+\title{Lab 5: Lasers and LEDs - python code}
+\author{Mathilde DECLERCQ - 123700659}
+\begin{document}
+\maketitle
+\begin{minted}[fontsize=\footnotesize, breaklines]{python3}
+    # Initialize IBM4 interface
+    the_dev = IBM4_Lib.Ser_Iface()  # find the first connected IBM4, open in DC mode by default
+            
+    # Current source parameters (from previous lab)
+    rl = 10
+    rg = 56e3
+    r1 = 1 / (1/4.7 + 1/33)
+    G = 5 + (200e3/rg)
+            
+    # Channel configuration for 2-wire and 4-wire measurements
+    output_ch = 'A0'        # Current source control voltage - for LED
+    input_ch_via = 'A2'     # Instrumentation amplifier output (for current measurement)
+    input_ch_2wire = 'A4'   # 2-wire voltage measurement across load
+    input_ch_4wire_high = 'D2'  # 4-wire high side voltage measurement
+    input_ch_4wire_low = 'A5'   # 4-wire low side voltage measurement (method 1 from Fig 4)
+    input_vout = 'A3' 
+
+
+    # For data & plot naming/saving - change for each measurement
+    device = 'Red LED with resistance 26.7kΩ'  
+    device_ = 'Red26.7k_fr'    
+    R = 0.4 # Responsivity of the device in A/V
+    R_TIA = 26.7e3  # 26.7 kΩ
+
+    # Measurement parameters
+    Nreads = 300
+    max_current_mA = 35
+    current_steps = 40
+            
+    # Calculate voltage range needed for desired current
+    # Using calibration from previous lab: Iout = K * Vset
+    K_approx = 29.487  # Approximate mA/V from previous calibration
+    max_voltage = max_current_mA / K_approx
+    volts = np.linspace(0, max_voltage, current_steps)
+            
+    print("Device Characterization: 2-Wire and 4-Wire Measurements")
+    print(f"Current Range: 0 to {max_current_mA} mA")
+    print(f"Analog Out: {output_ch}")
+    print(f"Output Voltage (Light): {input_vout}")
+    print(f"Analog In VIA: {input_ch_via}")
+    print(f"2-Wire Voltage: {input_ch_2wire}")
+    print(f"4-Wire High: {input_ch_4wire_high}")
+    print(f"4-Wire Low: {input_ch_4wire_low}")
+            
+    # -----------------------------
+    # DATA ACQUISITION
+    # -----------------------------
+    results = []
+    start = time.time()
+            
+    # Initialize current source
+    the_dev.WriteVoltage(output_ch, 0.0)
+    time.sleep(0.5)
+
+    print("Connect shorting wire before attaching laser!")
+            
+    print("\nStarting measurements...")
+    for v in volts:
+        the_dev.WriteVoltage(output_ch, v)
+        time.sleep(0.01)  # Short settling time
+                
+        # Read all measurement channels
+        via = the_dev.ReadAverageVoltage(input_ch_via, Nreads)
+        vout = the_dev.ReadAverageVoltage(input_vout, Nreads)
+        v_2wire = the_dev.ReadAverageVoltage(input_ch_2wire, Nreads)
+        v_4wire_high = the_dev.ReadAverageVoltage(input_ch_4wire_high, Nreads)
+        v_4wire_low = the_dev.ReadAverageVoltage(input_ch_4wire_low, Nreads)
+                
+        # Calculate 4-wire voltage (difference between high and low)
+        v_4wire = v_4wire_high - v_4wire_low
+                
+        # Calculate current from instrumentation amplifier
+        current_mA = (via / (G * r1)) * 1000.0
+            
+        print(f"Vset={v:.3f}V | I={current_mA:.2f}mA | V_2w={v_2wire:.4f}V | V_4w={v_4wire:.4f}V")
+                
+        results.append({"Vset": v, "Current_mA": current_mA, "Output_Voltage": vout, "V_2wire": v_2wire, "V_4wire": v_4wire, "V_4wire_high": v_4wire_high, "V_4wire_low": v_4wire_low, "VIA": via})
+            
+    end = time.time()
+    deltaT = end - start
+    readsTot = len(volts) * Nreads * 5  # 5 measurement channels
+    SR = readsTot / deltaT if deltaT > 0 else float('nan')
+    print(f"{readsTot} measurements in {deltaT:.3f}s => SR = {SR:.2f} Hz")
+            
+    # -----------------------------
+    # DATA PROCESSING
+    # -----------------------------
+    df = pd.DataFrame(results)
+            
+    # Calculate resistances for both methods
+    df["R_2wire"] = df["V_2wire"] / (df["Current_mA"] / 1000.0)  # R = V/I
+    df["R_4wire"] = df["V_4wire"] / (df["Current_mA"] / 1000.0)  # R = V/I
+
+    # Calculate the current
+    df["Iph_A"] = df["Output_Voltage"] / R_TIA
+
+    # Calculate the optical power
+    df['P_opt_W'] = df['Iph_A'] / R
+    df['P_opt_uW'] = df['P_opt_W'] * 1e6
+
+    # Remove invalid measurements (zero current)
+    df_valid = df[df["Current_mA"] > 0.1].copy()
+            
+    if len(df_valid) > 0:
+        # Calculate average resistances
+        avg_R_2wire = df_valid["R_2wire"].mean()
+        avg_R_4wire = df_valid["R_4wire"].mean()
+                
+        print(f"\nAverage 2-wire resistance: {avg_R_2wire:.4f} Ω")
+        print(f"Average 4-wire resistance: {avg_R_4wire:.4f} Ω")
+        print(f"Resistance difference: {abs(avg_R_2wire - avg_R_4wire):.4f} Ω")
+
+    # -----------------------------
+    # LOGARITHMIC FITTING
+    # -----------------------------
+    def logarithmic_fit(x, a, b):
+        """Logarithmic function: y = a * log(x) + b"""
+        return a * np.log(x) + b
+
+    def fit_and_plot_logarithmic(df, measurement_type):
+        """Perform logarithmic fitting and return fit parameters"""
+        # Filter out zero and negative values for logarithmic fitting
+        valid_data = df[(df["Current_mA"] > 0.1) & (df[f"V_{measurement_type}"] > 0)].copy()
+        
+        if len(valid_data) < 3:
+            print(f"Not enough valid data points for {measurement_type} logarithmic fitting")
+            return None, None, None
+        
+        x_data = valid_data["Current_mA"].values
+        y_data = valid_data[f"V_{measurement_type}"].values
+        
+        try:
+            # Perform logarithmic fitting
+            popt, pcov = curve_fit(logarithmic_fit, x_data, y_data, maxfev=5000)
+            
+            # Calculate R-squared
+            residuals = y_data - logarithmic_fit(x_data, *popt)
+            ss_res = np.sum(residuals**2)
+            ss_tot = np.sum((y_data - np.mean(y_data))**2)
+            r_squared = 1 - (ss_res / ss_tot) if ss_tot != 0 else 0
+            
+            return popt, pcov, r_squared
+            
+        except Exception as e:
+            print(f"Logarithmic fitting failed for {measurement_type}: {e}")
+            return None, None, None
+
+    # Perform logarithmic fitting for both measurement types
+    print("\n" + "="*50)
+    print("LOGARITHMIC FITTING ANALYSIS")
+    print("="*50)
+
+    fit_results = {}
+
+    for measurement_type in ['2wire', '4wire']:
+        popt, pcov, r_squared = fit_and_plot_logarithmic(df, measurement_type)
+        
+        if popt is not None:
+            a, b = popt
+            print(f"\n{measurement_type.upper()} Logarithmic Fit:")
+            print(f"  Equation: V = {a:.4f} * log(I) + {b:.4f}")
+            print(f"  R-squared: {r_squared:.6f}")
+            print(f"  Parameters: a = {a:.4f} ± {np.sqrt(pcov[0,0]):.4f}, b = {b:.4f} ± {np.sqrt(pcov[1,1]):.4f}")
+            
+            fit_results[measurement_type] = {
+                'params': popt,
+                'covariance': pcov,
+                'r_squared': r_squared
+            }
+        else:
+            fit_results[measurement_type] = None
+
+    # -----------------------------
+    # PLOTTING
+    # -----------------------------
+    plt.figure(figsize=(12, 8))
+
+    # Plot 2-wire IV curve
+    plt.plot(df["Current_mA"], df["V_2wire"], 'r--', label='2-Wire Measurement', markersize=4, linewidth=1)
+
+    # Plot 4-wire IV curve
+    plt.plot(df["Current_mA"], df["V_4wire"], 'g--', label='4-Wire Measurement', markersize=4, linewidth=1)
+
+    # Plot V_light
+    plt.plot(df["Current_mA"], df["Output_Voltage"], 'b-', label='Output Voltage', markersize=4, linewidth=1)
+
+    Fit, Off = np.polyfit(df["Current_mA"], df["Output_Voltage"], 1)
+    x_vset = np.linspace(df["Current_mA"].min(), df["Current_mA"].max(), 200)
+    plt.plot(x_vset, Fit * x_vset + Off, 'c--', linewidth=2, label=f'Linear Fit: K = {Fit:.3f}·I + {Off:.3f}')
+
+    # Plot logarithmic fits if available
+    current_fit = np.linspace(df_valid["Current_mA"].min(), df_valid["Current_mA"].max(), 100)
+
+    if '2wire' in fit_results and fit_results['2wire'] is not None:
+        a, b = fit_results['2wire']['params']
+        fit_2wire = logarithmic_fit(current_fit, a, b)
+        plt.plot(current_fit, fit_2wire, 'm--', 
+                label=f'2-Wire Log Fit: V = {a:.3f}·log(I) + {b:.3f}\n(R² = {fit_results["2wire"]["r_squared"]:.4f})',
+                linewidth=2)
+
+    if '4wire' in fit_results and fit_results['4wire'] is not None:
+        a, b = fit_results['4wire']['params']
+        fit_4wire = logarithmic_fit(current_fit, a, b)
+        plt.plot(current_fit, fit_4wire, 'k--', 
+                label=f'4-Wire Log Fit: V = {a:.3f}·log(I) + {b:.3f}\n(R² = {fit_results["4wire"]["r_squared"]:.4f})',
+                linewidth=2)
+
+    plt.xlabel('Current (mA)')
+    plt.ylabel('Voltage (V)')
+    plt.title(f'Device Characterization: 2-Wire vs 4-Wire IV Curves with Logarithmic Fitting for {device}')
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend()
+    plt.tight_layout()
+
+    iv_plot_filename = f"Device_IV_Characterization_with_Log_Fit_{device_}.png"
+    plt.savefig(iv_plot_filename, dpi=300)
+    print(f"IV characterization plot with logarithmic fit saved as '{iv_plot_filename}'")
+    plt.show()
+
+    # -----------------------------
+    # OPTICAL POWER PLOTS
+    # -----------------------------
+
+    # Optical Power vs Current
+    plt.figure(figsize=(8,6))
+    plt.plot(df['Current_mA'], df['P_opt_uW'], '.-', color="orange", label="Optical Power")
+    plt.xlabel('LED Drive Current (mA)')
+    plt.ylabel('Optical Power P_opt (µW)')
+    plt.title(f'Optical Power vs LED Drive Current for {device}')
+    plt.grid(True, linestyle='--', alpha=0.6)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(f"OpticalPower_vs_LEDcurrent_{device_}.png", dpi=300)
+    plt.close()
+
+    # ------------------ Combined IV + Optical Power Plot ------------------
+    fig, ax1 = plt.subplots(figsize=(12,8))
+    ax1.plot(df["Current_mA"], df["V_2wire"], 'r--', label='2-Wire Measurement', linewidth=1)
+    ax1.plot(df["Current_mA"], df["V_4wire"], 'g--', label='4-Wire Measurement', linewidth=1)
+
+    # Avoid log(0) by filtering positive currents only
+    df_nonzero = df[df["Current_mA"] > 0].copy()
+    log_I = np.log(df_nonzero["Current_mA"])
+
+    # Log-fit for 2-wire
+    log_fit_2, log_off_2 = np.polyfit(log_I, df_nonzero["V_2wire"], 1)
+    y2 = log_fit_2 * np.log(x_vset) + log_off_2
+    ax1.plot(x_vset, y2, 'r-', linewidth=1.5,
+            label=f"2-Wire Log Fit: V = {log_fit_2:.3f}·ln(I) + {log_off_2:.3f}")
+
+    # Log-fit for 4-wire
+    log_fit_4, log_off_4 = np.polyfit(log_I, df_nonzero["V_4wire"], 1)
+    y4 = log_fit_4 * np.log(x_vset) + log_off_4
+    ax1.plot(x_vset, y4, 'g-', linewidth=1.5,
+            label=f"4-Wire Log Fit: V = {log_fit_4:.3f}·ln(I) + {log_off_4:.3f}")
+
+    # Optical Power on Secondary Axis
+    ax2 = ax1.twinx()
+    ax2.plot(df["Current_mA"], df["P_opt_uW"], 'yo', linewidth=1, label='Optical Power (µW)')
+    ax2.set_ylabel('Optical Power (µW)', color='y')
+    ax2.tick_params(axis='y', labelcolor='y')
+
+    ax1.set_xlabel('Current (mA)')
+    ax1.set_ylabel('Voltage (V)')
+    plt.title(f'Device Characterization: IV Curves and Optical Power for {device}')
+
+    lines1, labels1 = ax1.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    ax1.legend(lines1 + lines2, labels1 + labels2, loc='upper left')
+
+    plt.grid(True, linestyle='--', alpha=0.5)
+    plt.tight_layout()
+    plt.savefig(f"IV_LI_Characteristics_{device_}.png", dpi=300)
+    plt.close()
+
+
+    # -----------------------------
+    # PLOTTING - CURRENT vs VOLTAGE (Alternative view)
+    # -----------------------------
+    plt.figure(figsize=(12, 8))
+
+    # Plot 2-wire measurement (Current vs Voltage)
+    plt.plot(df["V_2wire"], df["Current_mA"], 'ro-', label='2-Wire Measurement', markersize=4, linewidth=1)
+
+    # Plot 4-wire measurement (Current vs Voltage)
+    plt.plot(df["V_4wire"], df["Current_mA"], 'bs-', label='4-Wire Measurement', markersize=4, linewidth=1)
+
+    plt.xlabel('Voltage (V)')
+    plt.ylabel('Current (mA)')
+    plt.title(f"Current vs Voltage Characteristics: 2-Wire vs 4-Wire Measurements for {device}")
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend()
+    plt.tight_layout()
+
+    current_vs_voltage_plot_filename = f"Current_vs_Voltage_Characteristics_{device_}.png"
+    plt.savefig(current_vs_voltage_plot_filename, dpi=300)
+    print(f"Current vs Voltage plot saved as '{current_vs_voltage_plot_filename}'")
+    plt.show()
+
+
+    # Plot resistance comparison
+    if len(df_valid) > 0:
+        plt.figure(figsize=(10, 6))
+        plt.plot(df_valid["Current_mA"], df_valid["R_2wire"], 'ro-', label='2-Wire Resistance', markersize=4, linewidth=1)
+        plt.plot(df_valid["Current_mA"], df_valid["R_4wire"], 'bs-', label='4-Wire Resistance', markersize=4, linewidth=1)
+                
+        plt.xlabel('Current (mA)')
+        plt.ylabel('Resistance (Ω)')
+        plt.title(f'Device Resistance vs Current for {device}')
+        plt.grid(True, linestyle='--', alpha=0.7)
+        plt.legend()
+        plt.tight_layout()
+                
+        resistance_plot_filename = f"Device_Resistance_Characterization for {device_}.png"
+        plt.savefig(resistance_plot_filename, dpi=300)
+        print(f"Resistance characterization plot saved as '{resistance_plot_filename}'")
+        plt.show()
+
+
+    # -----------------------------
+    # SAVE DATA TO CSV
+    # -----------------------------
+    csv_filename = f'Device_Characterization_Data_{device_}.csv'
+    df.to_csv(csv_filename, index=False)
+    print(f"Data saved to '{csv_filename}' ({len(df)} points)")
+
+    # Save fitting results
+    if fit_results['2wire'] is not None or fit_results['4wire'] is not None:
+        fit_filename = f"Logarithmic_Fitting_Results'{device}'.txt"
+        with open(fit_filename, 'w') as f:
+            f.write("Logarithmic Fitting Results for IV Curves\n")
+            f.write("========================================\n\n")
+            
+            for measurement_type in ['2wire', '4wire']:
+                if fit_results[measurement_type] is not None:
+                    a, b = fit_results[measurement_type]['params']
+                    r_squared = fit_results[measurement_type]['r_squared']
+                    f.write(f"{measurement_type.upper()} Measurement:\n")
+                    f.write(f"  Equation: V = {a:.6f} * log(I) + {b:.6f}\n")
+                    f.write(f"  R-squared: {r_squared:.6f}\n")
+                    f.write(f"  Parameter uncertainties: a ± {np.sqrt(fit_results[measurement_type]['covariance'][0,0]):.6f}, "
+                        f"b ± {np.sqrt(fit_results[measurement_type]['covariance'][1,1]):.6f}\n\n")
+        
+        print(f"Fitting results saved to '{fit_filename}'")
+
+
+
+    # -----------------------------
+    # CLEANUP
+    # -----------------------------
+    # Turn off current source
+    the_dev.WriteVoltage(output_ch, 0.0)
+    time.sleep(0.1)
+    del the_dev
+
+\end{minted}
+\end{document}    
