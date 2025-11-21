@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex lab_5"] 1763646427.93995 "lab_5.aux" "lab_5.bbl" "lab_5" 1763646438.61 0
+["bibtex lab_5"] 1763650510.85082 "lab_5.aux" "lab_5.bbl" "lab_5" 1763743723.50831 0
   "./refs.bib" 1763645766.12467 1091 4c5d69f17ac812541f82f72f28900449 ""
   "/usr/local/texlive/2025/texmf-dist/bibtex/bst/base/unsrt.bst" 1292289607 18030 1376b4b231b50c66211e47e42eda2875 ""
-  "lab_5.aux" 1763646438.25452 13016 ccd1852492eb2338af89e04673a0945b "pdflatex"
+  "lab_5.aux" 1763743723.20568 13240 5ed67f31abf43b3dd7df70a322709e1d "pdflatex"
   (generated)
   "lab_5.bbl"
   "lab_5.blg"
   (rewritten before read)
-["pdflatex"] 1763646428.03937 "/Users/mathildedeclercq/Desktop/Lab 5/lab_5.tex" "lab_5.pdf" "lab_5" 1763646438.61016 0
-  "/Users/mathildedeclercq/Desktop/Lab 5/lab_5.tex" 1763646420.87528 29311 952264ff83185aa1478ed99190b3a2da ""
+["pdflatex"] 1763743712.9107 "/Users/mathildedeclercq/Desktop/Lab 5/lab_5.tex" "lab_5.pdf" "lab_5" 1763743723.50846 0
+  "/Users/mathildedeclercq/Desktop/Lab 5/lab_5.tex" 1763743712.61905 30598 8f50531b5903e0d35f93e0efefa3538b ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -202,11 +202,11 @@
   "commands/IV_LI_Characteristics_green.png" 1763378716.73302 376570 044da1b17488a559634c493272a04aae ""
   "commands/IV_LI_Characteristics_red.png" 1763378717.29325 371401 977e36ec5b18b01d1df6edece775a9b4 ""
   "commands/Resistance_vs_Wavelength.png" 1763567219.37994 109031 674b24f276c87d3147daadb639dc9ee6 ""
-  "lab_5.aux" 1763646438.25452 13016 ccd1852492eb2338af89e04673a0945b "pdflatex"
-  "lab_5.bbl" 1763646428.03606 882 4719768d97af6d2d5d9d7b597b2560ad "bibtex lab_5"
-  "lab_5.out" 1763646438.25602 4068 4a42cdb2fb4d07fc9032b0f5d3edd3d9 "pdflatex"
-  "lab_5.tex" 1763646420.87528 29311 952264ff83185aa1478ed99190b3a2da ""
-  "lab_5.toc" 1763646438.25629 2240 ae206b68523227f2efbff37e4c35a397 "pdflatex"
+  "lab_5.aux" 1763743723.20568 13240 5ed67f31abf43b3dd7df70a322709e1d "pdflatex"
+  "lab_5.bbl" 1763650510.95153 882 4719768d97af6d2d5d9d7b597b2560ad "bibtex lab_5"
+  "lab_5.out" 1763743723.20706 4260 4eb7b8bb59a7cbded9c10a4e5659fc17 "pdflatex"
+  "lab_5.tex" 1763743712.61905 30598 8f50531b5903e0d35f93e0efefa3538b ""
+  "lab_5.toc" 1763743723.20732 2382 0eb5c73a551d4c561afed902b4e428fa "pdflatex"
   "photoreceiver_scheme.png" 1762971653.66856 129415 6aada7a84af205496095be42c5dc232a ""
   (generated)
   "lab_5.aux"

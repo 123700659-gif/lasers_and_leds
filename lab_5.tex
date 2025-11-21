@@ -57,7 +57,7 @@ Laser informations from the spec sheet:
 \begin{itemize}
     \item $\lambda$ = $650~\mathrm{nm}$
     \item P = $5~\mathrm{mW}$, here we will take P = $7~\mathrm{mW}$ to ensure the validity of our calculations
-    \item Divergences angles: $\theta_{\parallel } = 6 ^{\circ} = 0.104 ~\mathrm{rad}$ and $\theta_{\perp } = 24^{\circ} = 0.409~\mathrm{rad}$
+    \item Divergence angles: $\theta_{\parallel } = 6 ^{\circ} = 0.104 ~\mathrm{rad}$ and $\theta_{\perp } = 24^{\circ} = 0.409~\mathrm{rad}$
 \end{itemize}
 \subsection{In Lab}
 \subsubsection*{MPE}
@@ -137,7 +137,7 @@ For this circuit, the OpAmp MCP601 has been used and it has been powered up with
     \caption{Circuit diagrams}
     \label{fig:diagrams}
 \end{figure}
-The value of the feedback resistor $R_{f}$ is chosen to be $26.7\mathrm{k\Omega}$  and the protection resistance is $R_{p} = 2.17\mathrm{k\Omega}$. For the resistance used in the 2 and 4 wire circuit, their values is $R = 2.2\mathrm{k\Omega}$.
+The value of the feedback resistor $R_{f}$ is chosen to be $26.7\mathrm{k\Omega}$  and the protection resistance is $R_{p} = 2.17\mathrm{k\Omega}$. For the resistance used in the 2 and 4 wire circuit, their values are $R = 2.2\mathrm{k\Omega}$.
 
 \section{Lab results}
 The pictures of the experimental setup can be found below:
@@ -606,13 +606,24 @@ The objective of this lab was to characterize the LIV (Light--Current--Voltage) 
 
 Analysis of internal resistances revealed variations among devices. While most LEDs exhibited stable resistance values, the blue LED showed an apparent negative resistance, likely attributable to measurement error. In general, the LEDs demonstrated smoother and more predictable optical power scaling, whereas the laser displayed irregularities that may be linked to mode hopping or threshold effects. Among the LEDs, the blue device produced the highest optical output, consistent with its higher forward voltage requirement.  
 
-The use of four-wire measurements proved advantageous, as they eliminated lead and contact resistances, resulting in more accurate voltage readings and lower calculated internal resistances.  
+The use of 4-wire measurements proved advantageous, as they eliminated lead and contact resistances, resulting in more accurate voltage readings and lower calculated internal resistances.  
 
-Limitations of the experiment include measurement noise, calibration uncertainties in the photoreceiver, and potential temperature effects on device performance. Future work could involve temperature-controlled measurements, improved detector calibration, and exploration of higher current ranges to investigate efficiency droop in LEDs more thoroughly.  
+Limitations of the experiment include measurement noise, calibration uncertainties in the photoreceiver, and potential temperature effects on device performance. Future work could involve temperature-controlled measurements, improved detector calibration, and exploration of higher current ranges to investigate efficiency drop in LEDs more thoroughly.  
 
 Overall, this lab provided valuable insights into the electrical and optical behavior of LEDs and lasers, highlighting both their performance characteristics and the importance of precise measurement techniques in optoelectronic device characterization.
 
 \bibliographystyle{unsrt}
 \bibliography{refs}
 
+
+\section{Appendix}
+\subsection{Datasheets}
+\begin{itemize}
+    \item Red LED: \href{https://github.com/123700659-gif/lasers_and_leds/blob/b06cbedd6583ba8bb4b780d5e56fc3c27b4dd94d/commands/Device_Characterization_Data_Red26.7k_fr_current_power.csv}{Full data sheet}
+    \item Amber LED: \href{https://github.com/123700659-gif/lasers_and_leds/blob/b06cbedd6583ba8bb4b780d5e56fc3c27b4dd94d/commands/Device_Characterization_Data_Amber26.7k_fr_current_power.csv}{Full data sheet}
+    \item Green LED: \href{https://github.com/123700659-gif/lasers_and_leds/blob/b06cbedd6583ba8bb4b780d5e56fc3c27b4dd94d/commands/Device_Characterization_Data_Green26.7k_fr_current_power.csv}{Full data sheet}
+    \item Blue LED: \href{https://github.com/123700659-gif/lasers_and_leds/blob/b06cbedd6583ba8bb4b780d5e56fc3c27b4dd94d/commands/Device_Characterization_Data_Blue26.7k_fr_current_power.csv}{Full data sheet}
+    \item Laser: \href{https://github.com/123700659-gif/lasers_and_leds/blob/b06cbedd6583ba8bb4b780d5e56fc3c27b4dd94d/commands/Device_Characterization_Data_Laser26.7k_fr_with_power.csv}{Full data sheet}
+\end{itemize}
+\href{https://github.com/123700659-gif/lasers_and_leds/blob/b06cbedd6583ba8bb4b780d5e56fc3c27b4dd94d/commands/Commands.ipynb}{Code used for data collection, analysis and plotting}
 \end{document}
